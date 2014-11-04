@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe ToyLisp::Tokeniser do
+describe Toil::Tokeniser do
 
   before do
-    @subject = ToyLisp::Tokeniser.new
+    @subject = Toil::Tokeniser.new
   end
 
   describe :tokenise do
@@ -44,25 +44,26 @@ describe ToyLisp::Tokeniser do
     end
 
     it 'emits five tokens for " ( ) "' do
-      types = @subject.tokenise(' ( ) ').map{|tok| tok[:type]} 
+      types = @subject.tokenise(' ( ) ').map{|tok| tok[:type]}
       expect(types).to eq [:whitespace, :sexpr_start, :whitespace, :sexpr_end, :whitespace]
     end
 
     it 'emits five tokens for "(a b)"' do
-      tokens = @subject.tokenise('(a b)') 
-      types = tokens.map{|tok| tok[:type]} 
-      contents = tokens.map{|tok| tok[:content]} 
+      tokens = @subject.tokenise('(a b)')
+      types = tokens.map{|tok| tok[:type]}
+      contents = tokens.map{|tok| tok[:content]}
       expect(types).to eq [:sexpr_start, :symbol, :whitespace, :symbol, :sexpr_end]
       expect(contents).to eq [nil, 'a', ' ', 'b', nil]
     end
 
     it 'emits seven tokens for "(foo bar baz)"' do
       tokens = @subject.tokenise('(foo bar baz)')
-      types = tokens.map{|tok| tok[:type]} 
-      contents = tokens.map{|tok| tok[:content]} 
+      types = tokens.map{|tok| tok[:type]}
+      contents = tokens.map{|tok| tok[:content]}
       expect(types).to eq [:sexpr_start, :symbol, :whitespace, :symbol, :whitespace, :symbol, :sexpr_end]
       expect(contents).to eq [nil, 'foo', ' ', 'bar', ' ', 'baz', nil]
     end
+
   end
 
 end

@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-module ToyLisp
+module Toil
 
 class Tokeniser
   def tokenise(line)
