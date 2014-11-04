@@ -9,7 +9,7 @@ class Tokeniser
     line.each_char do |ch|
       done = false
       case ch
-      when " ", "\t"
+      when " ", "\t", "\n"
         if (token and (token[:type] != :whitespace))
           tokens << token
           token = nil

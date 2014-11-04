@@ -77,6 +77,24 @@ describe Toil::Tokeniser do
                            :whitespace, :symbol, :sexpr_end]
       expect(contents).to eq [nil, 'foo', ' ', 'bar', ' ', 'baz', nil]
     end
+
+    it 'handles multiple lines nicely' do
+      INPUT = <<-FOO
+(a b
+  (c d))
+FOO
+      tokens = @subject.tokenise(INPUT)
+      types = tokens.map{|tok| tok[:type]}
+      contents = tokens.map{|tok| tok[:content]}
+
+      expect(types).to eq [
+        :sexpr_start, :symbol, :whitespace, :symbol,
+        :whitespace, :sexpr_start, :symbol, :whitespace, :symbol, :sexpr_end,
+          :sexpr_end, :whitespace]
+      expect(contents).to eq [
+        nil, 'a', ' ', 'b',
+        "\n  ", nil, 'c', ' ', 'd', nil, nil, "\n"]
+    end
   end
 
 end
