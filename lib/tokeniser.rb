@@ -1,5 +1,3 @@
-#!/usr/bin/ruby
-
 module Toil
 
 class Tokeniser
