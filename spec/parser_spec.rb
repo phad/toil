@@ -31,14 +31,18 @@ describe Toil::Parser do
     expect(ast.children.first.children).to be_empty
   end
 
-  describe :roundtrips do
-    # TODO: create a custom syntax for below so I just say
-    # it_should_roundtrip("(())")
+  describe "parse-serialize roundtrips for nested s-expr" do
     it { subject.parse(@tokeniser.tokenise("")).should be_nil }
-    it { subject.parse(@tokeniser.tokenise("()")).serialize.should eq "()" }
-    it { subject.parse(@tokeniser.tokenise("(())")).serialize.should eq "(())" }
-    it { subject.parse(@tokeniser.tokenise("(()())")).serialize.should eq "(()())" }
-    it { subject.parse(@tokeniser.tokenise("(()(())())")).serialize.should eq "(()(())())" }
+    ["()", "(())", "(() ())", "(() (()) ())"].each do |src|
+      it { subject.parse(@tokeniser.tokenise(src)).serialize.should eq src }
+    end
+  end
+
+  describe "parse-serialize roundtrips for nested s-expr with atoms" do
+    it { subject.parse(@tokeniser.tokenise("")).should be_nil }
+    ["(a)", "(a (b))", "(a (b c) (d) e)", "((a b) (c (d e f) g) h (i j) k l)"].each do |src|
+      it { subject.parse(@tokeniser.tokenise(src)).serialize.should eq src }
+    end
   end
 
   it "raise an exception for invalid sexpr_start/end token nestings" do
@@ -47,6 +51,11 @@ describe Toil::Parser do
     expect(lambda { subject.parse(@tokeniser.tokenise("())")) }).to raise_error
     expect(lambda { subject.parse(@tokeniser.tokenise("()())")) }).to raise_error
     expect(lambda { subject.parse(@tokeniser.tokenise("(()")) }).to raise_error
+  end
+
+  it "raise an exception if atom token found outside an s-expr" do
+    expect(lambda { subject.parse(@tokeniser.tokenise("foo ()")) }).to raise_error
+    expect(lambda { subject.parse(@tokeniser.tokenise("() bar")) }).to raise_error
   end
 
 end
