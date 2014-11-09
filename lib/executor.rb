@@ -31,6 +31,8 @@ class Executor
       SubtractionOperation.new
     elsif operator == '*'
       MultiplicationOperation.new
+    elsif operator == '/'
+      DivisionOperation.new
     else
       raise "Unknown operation #{operator}"
     end
@@ -53,6 +55,13 @@ end
 class MultiplicationOperation
   def perform(operands)
     operands.inject(1) {|a, v| a * v.to_i}
+  end
+end
+
+class DivisionOperation
+  def perform(operands)
+    raise "Division requires exactly 2 operands" unless operands.size == 2
+    operands[0].to_i / operands[1].to_i
   end
 end
 

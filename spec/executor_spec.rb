@@ -35,4 +35,22 @@ describe Toil::Executor do
     end
   end
 
+  it "performs simple division" do
+    {"(/ 6 3)" => 2,
+     "(/ 24 (/ 12 4))" => 8}.each do |expr, val|
+      ast = @parser.parse(@tokeniser.tokenise(expr))
+      executor = Toil::Executor.new(ast)
+      expect(executor.run).to eq val
+    end
+  end
+
+  it "performs mixed arithmetic" do
+    {"(/ (+ 1 5) (- 7 4))" => 2,
+     "(* 4 (/ 12 4) (+ 2 7))" => 108}.each do |expr, val|
+      ast = @parser.parse(@tokeniser.tokenise(expr))
+      executor = Toil::Executor.new(ast)
+      expect(executor.run).to eq val
+    end
+  end
+
 end
